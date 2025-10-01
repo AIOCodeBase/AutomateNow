@@ -1,0 +1,4 @@
+@echo off
+ren "oldname.txt" "newname.txt"
+echo File renamed!
+pause
