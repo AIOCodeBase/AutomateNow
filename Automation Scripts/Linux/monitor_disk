@@ -1,0 +1,7 @@
+#!/bin/bash
+df -h | awk '$NF=="/"{printf "%s", $5}' | cut -d'%' -f1 | {
+    read usage
+    if [ "$usage" -gt 90 ]; then
+        echo "Disk space critical!"
+    fi
+}
