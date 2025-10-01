@@ -1,0 +1,4 @@
+@echo off
+del /q /f /s %TEMP%\*.*
+echo Temporary files cleaned!
+pause
