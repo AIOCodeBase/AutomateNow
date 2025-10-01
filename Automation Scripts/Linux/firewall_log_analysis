@@ -1,0 +1,2 @@
+#!/bin/bash
+grep "DPT=22" /var/log/ufw.log | awk '{print $1, $2, $5}' | sort | uniq -c | sort -nr
