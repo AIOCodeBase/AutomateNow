@@ -1,0 +1,4 @@
+@echo off
+powershell -command "Compress-Archive -Path 'C:\Source\*' -DestinationPath 'C:\backup.zip'"
+echo Backup created!
+pause
