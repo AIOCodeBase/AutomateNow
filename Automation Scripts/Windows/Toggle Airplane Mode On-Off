@@ -1,0 +1,6 @@
+@echo off
+devcon disable "PCI\*"
+timeout /t 3
+devcon enable "PCI\*"
+echo Airplane mode toggled!
+pause
