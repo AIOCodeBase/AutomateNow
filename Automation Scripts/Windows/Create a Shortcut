@@ -1,0 +1,4 @@
+@echo off
+mklink "C:\Shortcut.lnk" "C:\Target\file.exe"
+echo Shortcut created!
+pause
