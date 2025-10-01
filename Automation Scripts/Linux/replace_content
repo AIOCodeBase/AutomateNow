@@ -1,0 +1,2 @@
+#!/bin/bash
+sed -i 's/old_text/new_text/g' file.txt
