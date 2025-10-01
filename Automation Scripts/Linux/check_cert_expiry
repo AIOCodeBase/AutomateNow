@@ -1,0 +1,8 @@
+#!/bin/bash
+openssl x509 -enddate -noout -in /etc/ssl/certs/cert.pem | cut -d= -f2 | {
+    read expiry
+    days_left=$(( ($(date -d "$expiry" +%s) - $(date +%s)) / 86400 ))
+    if [ "$days_left" -lt 30 ]; then
+        echo "Certificate expires in $days_left days!" | mail -s "Cert Expiry Alert" admin@example.com
+    fi
+}
