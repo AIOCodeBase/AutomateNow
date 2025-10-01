@@ -1,0 +1,4 @@
+@echo off
+qres /x:1920 /y:1080
+echo Screen resolution changed!
+pause
