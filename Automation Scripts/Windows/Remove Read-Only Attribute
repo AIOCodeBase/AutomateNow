@@ -1,0 +1,4 @@
+@echo off
+attrib -r "file.txt"
+echo File is no longer read-only!
+pause
