@@ -1,0 +1,4 @@
+#!/bin/bash
+src="/path/to/source"
+dest="/path/to/backup"
+tar -czf "$dest/backup_$(date +%Y%m%d).tar.gz" "$src"
