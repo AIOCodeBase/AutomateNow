@@ -1,0 +1,4 @@
+@echo off
+mkdir Folder1 Folder2 Folder3
+echo Folders created!
+pause
