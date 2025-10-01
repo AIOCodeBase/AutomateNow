@@ -1,0 +1,4 @@
+@echo off
+wmic product get name,version > installed_programs.txt
+echo Installed programs list exported!
+pause
