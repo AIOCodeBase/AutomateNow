@@ -1,4 +1,4 @@
 @echo off
-move "C:\Source\*.*" "D:\Destination\"
-echo Files moved!
+xcopy "C:\Source\*.*" "D:\Destination\" /s /e
+echo Files copied!
 pause
