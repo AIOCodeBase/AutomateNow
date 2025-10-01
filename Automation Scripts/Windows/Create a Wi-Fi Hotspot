@@ -1,0 +1,5 @@
+@echo off
+netsh wlan set hostednetwork mode=allow ssid=MyHotspot key=MyPassword
+netsh wlan start hostednetwork
+echo Wi-Fi hotspot created!
+pause
