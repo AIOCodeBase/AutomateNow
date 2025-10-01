@@ -1,0 +1,2 @@
+#!/bin/bash
+rsync -avz /path/to/backup user@remote_host:/path/to/destination
