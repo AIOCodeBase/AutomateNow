@@ -1,0 +1,6 @@
+@echo off
+devcon disable "BTH\*"
+timeout /t 3
+devcon enable "BTH\*"
+echo Bluetooth toggled!
+pause
