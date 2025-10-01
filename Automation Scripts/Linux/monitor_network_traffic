@@ -1,0 +1,2 @@
+#!/bin/bash
+iftop -i eth0 -n -t -s 10
