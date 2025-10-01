@@ -1,0 +1,3 @@
+#!/bin/bash
+docker commit container_name backup_image
+docker save backup_image > backup.tar
