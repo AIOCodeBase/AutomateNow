@@ -1,0 +1,3 @@
+@echo off
+nircmd setsysvolume 65535
+pause
