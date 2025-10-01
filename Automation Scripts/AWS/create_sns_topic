@@ -1,0 +1,9 @@
+import boto3
+
+def create_sns_topic(topic_name):
+    sns = boto3.client('sns')
+    response = sns.create_topic(Name=topic_name)
+    print(f"Created SNS topic: {response['TopicArn']}")
+
+if __name__ == "__main__":
+    create_sns_topic('my-topic')
