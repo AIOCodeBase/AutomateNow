@@ -16,8 +16,6 @@ Hello, fellow developers! 👋
 
 Are you looking for a fun and creative way to participate in Hacktoberfest? Do you want to showcase your skills and personality in a unique and stylish way? If yes, then this issue is for you! 🎉
 
-This issue is for everyone who wants to participate in Hacktoberfest 2023 by building their own profile style using any framework or CSS. You are free to imagine your creativity and design your own profile page that reflects who you are and what you do. You can use any colors, fonts, images, animations, or effects that you like. The only limit is your imagination! 😍
-
 To join this challenge, you need to do the following:
 
 - Fork this repository and create a new branch with your name.
