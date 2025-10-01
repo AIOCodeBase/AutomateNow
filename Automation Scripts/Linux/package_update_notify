@@ -1,0 +1,6 @@
+#!/bin/bash
+apt list --upgradable | grep -v "^Listing..." | {
+    if [ $(wc -l) -gt 0 ]; then
+        echo "Updates available: $(apt list --upgradable | wc -l)" | mail -s "Package Update" admin@example.com
+    fi
+}
