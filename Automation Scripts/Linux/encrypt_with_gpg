@@ -1,0 +1,2 @@
+#!/bin/bash
+gpg --encrypt --recipient user@example.com file.txt
