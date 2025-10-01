@@ -1,0 +1,4 @@
+@echo off
+ftype http=firefox.exe "%1"
+echo Default browser changed!
+pause
