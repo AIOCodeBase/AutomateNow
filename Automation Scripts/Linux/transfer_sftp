@@ -1,0 +1,5 @@
+#!/bin/bash
+sftp user@remote_host <<EOF
+put file.txt
+bye
+EOF
