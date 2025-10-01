@@ -1,0 +1,4 @@
+@echo off
+rundll32 printui.dll,PrintUIEntry /y /n "PrinterName"
+echo Default printer changed!
+pause
