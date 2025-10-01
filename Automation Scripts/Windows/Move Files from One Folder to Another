@@ -1,0 +1,4 @@
+@echo off
+move "C:\Source\*.*" "D:\Destination\"
+echo Files moved!
+pause
