@@ -1,0 +1,4 @@
+@echo off
+attrib +r "file.txt"
+echo File is now read-only!
+pause
