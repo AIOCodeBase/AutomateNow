@@ -1,0 +1,2 @@
+#!/bin/bash
+who >> /var/log/user_activity.log
