@@ -1,0 +1,4 @@
+@echo off
+start /wait "" "setup.exe" /S
+echo Software installed silently!
+pause
