@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -L 8080:localhost:80 user@remote_host
