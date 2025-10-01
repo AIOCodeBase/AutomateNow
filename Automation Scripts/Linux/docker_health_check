@@ -1,0 +1,7 @@
+#!/bin/bash
+docker ps --format '{{.Names}}' | while read container; do
+    status=$(docker inspect --format='{{.State.Health.Status}}' $container)
+    if [ "$status" != "healthy" ]; then
+        echo "$container is $status" | mail -s "Docker Alert" admin@example.com
+    fi
+done
