@@ -1,2 +1,5 @@
 #!/bin/bash
+# update system packages to latest versions
+
+# update package list and upgrade all packages
 sudo apt update && sudo apt upgrade -y

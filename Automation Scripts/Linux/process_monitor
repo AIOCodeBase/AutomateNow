@@ -1,0 +1,23 @@
+#!/bin/bash
+# monitor high cpu processes and memory usage
+
+echo "=== Top CPU Consuming Processes ==="
+ps aux --sort=-%cpu | head -10
+
+echo -e "\n=== Top Memory Consuming Processes ==="
+ps aux --sort=-%mem | head -10
+
+echo -e "\n=== Load Average ==="
+uptime
+
+echo -e "\n=== Running Processes Count ==="
+echo "Total processes: $(ps aux | wc -l)"
+echo "Running processes: $(ps aux | grep -v " Z " | wc -l)"
+echo "Zombie processes: $(ps aux | grep " Z " | wc -l)"
+
+# check for zombie processes
+zombies=$(ps aux | grep " Z " | wc -l)
+if [ $zombies -gt 0 ]; then
+    echo "WARNING: $zombies zombie processes detected"
+    logger "Zombie processes detected: $zombies"
+fi

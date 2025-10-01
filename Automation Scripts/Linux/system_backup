@@ -1,0 +1,53 @@
+#!/bin/bash
+# comprehensive system backup script
+
+# configuration
+backup_base="/backup"
+date_stamp=$(date +%Y%m%d_%H%M%S)
+backup_dir="$backup_base/system_backup_$date_stamp"
+
+echo "=== System Backup Started ==="
+echo "Backup directory: $backup_dir"
+
+# create backup directory
+mkdir -p "$backup_dir"
+
+# backup system configuration files
+echo "Backing up system configuration..."
+tar -czf "$backup_dir/etc_backup.tar.gz" /etc 2>/dev/null
+
+# backup user home directories (excluding large files)
+echo "Backing up user data..."
+find /home -maxdepth 2 -name ".*" -not -path "*/.*cache*" -not -path "*/.*tmp*" | \
+    tar -czf "$backup_dir/home_configs.tar.gz" -T - 2>/dev/null
+
+# backup cron jobs
+echo "Backing up cron jobs..."
+crontab -l > "$backup_dir/crontab_backup.txt" 2>/dev/null
+
+# backup installed packages list
+echo "Backing up package list..."
+if command -v dpkg >/dev/null; then
+    dpkg --get-selections > "$backup_dir/packages.txt"
+elif command -v rpm >/dev/null; then
+    rpm -qa > "$backup_dir/packages.txt"
+fi
+
+# backup system logs (recent only)
+echo "Backing up recent logs..."
+find /var/log -name "*.log" -mtime -7 | \
+    tar -czf "$backup_dir/recent_logs.tar.gz" -T - 2>/dev/null
+
+# create backup summary
+echo "Creating backup summary..."
+{
+    echo "System Backup Summary"
+    echo "Date: $(date)"
+    echo "Hostname: $(hostname)"
+    echo "Kernel: $(uname -r)"
+    echo "Backup files:"
+    ls -lh "$backup_dir"
+} > "$backup_dir/backup_summary.txt"
+
+echo "System backup completed: $backup_dir"
+logger "System backup completed: $backup_dir"

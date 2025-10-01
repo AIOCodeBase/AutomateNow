@@ -1,0 +1,34 @@
+#!/bin/bash
+# clean temporary files and directories
+
+echo "=== Temporary Files Cleanup ==="
+
+# clean /tmp directory (files older than 7 days)
+echo "Cleaning /tmp directory..."
+find /tmp -type f -atime +7 -delete 2>/dev/null
+find /tmp -type d -empty -delete 2>/dev/null
+
+# clean user temp directories
+echo "Cleaning user temp directories..."
+find /var/tmp -type f -atime +7 -delete 2>/dev/null
+
+# clean system cache
+echo "Cleaning package cache..."
+if command -v apt-get >/dev/null; then
+    apt-get clean
+elif command -v yum >/dev/null; then
+    yum clean all
+elif command -v dnf >/dev/null; then
+    dnf clean all
+fi
+
+# clean thumbnail cache
+echo "Cleaning thumbnail cache..."
+find /home -name ".thumbnails" -type d -exec rm -rf {} + 2>/dev/null
+
+# clean core dumps
+echo "Cleaning core dumps..."
+find /var/crash -name "core.*" -mtime +7 -delete 2>/dev/null
+
+echo "Temporary cleanup completed"
+logger "System temporary cleanup performed"

@@ -1,0 +1,20 @@
+#!/bin/bash
+# free system memory by clearing caches
+
+echo "Memory status before cleanup:"
+free -h
+
+# clear page cache
+echo 1 > /proc/sys/vm/drop_caches
+
+# clear dentries and inodes
+echo 2 > /proc/sys/vm/drop_caches
+
+# clear page cache, dentries and inodes
+echo 3 > /proc/sys/vm/drop_caches
+
+echo "Memory status after cleanup:"
+free -h
+
+# log the cleanup action
+logger "System memory cleanup performed"
