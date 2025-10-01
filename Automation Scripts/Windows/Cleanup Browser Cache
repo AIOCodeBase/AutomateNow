@@ -1,0 +1,4 @@
+@echo off
+del /q /f /s "%LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache\*"
+echo Browser cache cleaned!
+pause
