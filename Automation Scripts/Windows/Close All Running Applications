@@ -1,0 +1,4 @@
+@echo off
+taskkill /f /fi "username eq %username%"
+echo All applications closed!
+pause
