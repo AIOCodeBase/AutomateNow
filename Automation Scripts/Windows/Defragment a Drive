@@ -1,0 +1,3 @@
+@echo off
+defrag C: /U /V
+pause
