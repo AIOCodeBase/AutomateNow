@@ -1,0 +1,4 @@
+@echo off
+del /q "C:\Folder\*.*"
+echo Files deleted!
+pause
