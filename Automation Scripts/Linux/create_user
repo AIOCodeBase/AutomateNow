@@ -1,1 +1,3 @@
-
+#!/bin/bash
+sudo useradd -m newuser
+sudo passwd newuser
