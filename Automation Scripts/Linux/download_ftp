@@ -1,0 +1,2 @@
+#!/bin/bash
+wget --ftp-user=user --ftp-password=pass ftp://example.com/file.zip
