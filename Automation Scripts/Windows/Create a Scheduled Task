@@ -1,0 +1,4 @@
+@echo off
+schtasks /create /tn "MyTask" /tr "C:\script.bat" /sc daily /st 23:00
+echo Scheduled task created!
+pause
