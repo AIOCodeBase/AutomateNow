@@ -1,0 +1,4 @@
+@echo off
+attrib -h "secret.txt"
+echo File unhidden!
+pause
