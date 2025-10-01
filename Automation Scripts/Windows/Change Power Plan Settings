@@ -1,0 +1,4 @@
+@echo off
+powercfg /setactive SCHEME_MIN
+echo Power plan changed to power saver!
+pause
