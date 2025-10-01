@@ -1,0 +1,6 @@
+#!/bin/bash
+grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | while read count ip; do
+    if [ "$count" -gt 3 ]; then
+        echo "Alert: $count failed logins from $ip" | mail -s "Failed Login Alert" admin@example.com
+    fi
+done
