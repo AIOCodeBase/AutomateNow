@@ -1,0 +1,4 @@
+@echo off
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "ProgramName" /t REG_SZ /d "" /f
+echo Startup program disabled!
+pause
