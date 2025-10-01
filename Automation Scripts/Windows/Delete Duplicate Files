@@ -1,0 +1,4 @@
+@echo off
+for %%f in (*.*) do if exist "%%f" del /f "%%f"
+echo Duplicate files deleted!
+pause
