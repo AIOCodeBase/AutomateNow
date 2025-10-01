@@ -1,0 +1,9 @@
+import boto3
+
+def create_iam_user(username):
+    iam = boto3.client('iam')
+    iam.create_user(UserName=username)
+    print(f"Created IAM user {username}")
+
+if __name__ == "__main__":
+    create_iam_user('new-user')
