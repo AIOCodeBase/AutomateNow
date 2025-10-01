@@ -1,0 +1,4 @@
+@echo off
+powershell -command "Expand-Archive -Path 'C:\backup.zip' -DestinationPath 'C:\Extracted'"
+echo Files extracted!
+pause
