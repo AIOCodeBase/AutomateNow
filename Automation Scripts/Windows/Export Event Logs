@@ -1,0 +1,4 @@
+@echo off
+wevtutil epl System system_logs.evtx
+echo Event logs exported!
+pause
