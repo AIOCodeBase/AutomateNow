@@ -1,0 +1,26 @@
+#!/bin/bash
+# monitor network connections and interface statistics
+
+echo "=== Network Interface Statistics ==="
+cat /proc/net/dev | awk '
+BEGIN { printf "%-10s %10s %10s %10s %10s\n", "Interface", "RX Bytes", "TX Bytes", "RX Packets", "TX Packets" }
+NR > 2 {
+    gsub(/:/, "", $1)
+    printf "%-10s %10d %10d %10d %10d\n", $1, $2, $10, $3, $11
+}'
+
+echo -e "\n=== Active Network Connections ==="
+netstat -tuln | grep LISTEN | wc -l
+echo "Listening ports: $(netstat -tuln | grep LISTEN | wc -l)"
+
+echo -e "\n=== Top Network Connections by State ==="
+netstat -tun | awk 'NR > 2 { state[$6]++ } END { for (s in state) print state[s], s }' | sort -nr
+
+echo -e "\n=== Ping Test to Gateway ==="
+gateway=$(ip route | grep default | awk '{print $3}' | head -1)
+if ping -c 1 -W 1 $gateway > /dev/null 2>&1; then
+    echo "Gateway ($gateway): reachable"
+else
+    echo "Gateway ($gateway): unreachable"
+    logger "Network gateway unreachable: $gateway"
+fi

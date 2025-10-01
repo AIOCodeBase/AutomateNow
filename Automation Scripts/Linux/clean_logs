@@ -1,2 +1,5 @@
 #!/bin/bash
+# clean old log files to free disk space
+
+# remove log files older than 7 days
 find /var/log -type f -name "*.log" -mtime +7 -exec rm -f {} \;

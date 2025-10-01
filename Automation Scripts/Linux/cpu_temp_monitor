@@ -1,0 +1,17 @@
+#!/bin/bash
+# monitor cpu temperature and alert if too high
+
+# get cpu temperature from sensors
+temp=$(sensors | grep -i "core 0" | awk '{print $3}' | sed 's/[^0-9.]//g')
+
+# threshold in celsius
+threshold=80
+
+# check if temperature exceeds threshold
+if (( $(echo "$temp > $threshold" | bc -l) )); then
+    echo "WARNING: CPU temperature is ${temp}°C (threshold: ${threshold}°C)"
+    # log to system log
+    logger "CPU temperature alert: ${temp}°C"
+else
+    echo "CPU temperature: ${temp}°C (normal)"
+fi

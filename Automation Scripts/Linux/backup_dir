@@ -1,4 +1,9 @@
 #!/bin/bash
+# create compressed backup of directory
+
+# source and destination paths
 src="/path/to/source"
 dest="/path/to/backup"
+
+# create dated backup archive
 tar -czf "$dest/backup_$(date +%Y%m%d).tar.gz" "$src"

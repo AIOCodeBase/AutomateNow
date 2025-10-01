@@ -1,0 +1,31 @@
+#!/bin/bash
+# check health of critical system services
+
+# list of critical services to monitor
+services=("ssh" "systemd-networkd" "systemd-resolved" "cron")
+
+echo "=== Service Health Check ==="
+for service in "${services[@]}"; do
+    if systemctl is-active --quiet "$service"; then
+        echo "✓ $service: running"
+    else
+        echo "✗ $service: not running"
+        logger "Service health alert: $service is not running"
+
+        # attempt to restart the service
+        echo "  attempting to restart $service..."
+        if systemctl restart "$service" 2>/dev/null; then
+            echo "  ✓ $service restarted successfully"
+            logger "Service $service restarted successfully"
+        else
+            echo "  ✗ failed to restart $service"
+            logger "Failed to restart service: $service"
+        fi
+    fi
+done
+
+echo -e "\n=== Failed Services ==="
+systemctl --failed --no-legend | awk '{print $1}' | while read service; do
+    echo "Failed service: $service"
+    logger "Failed service detected: $service"
+done
