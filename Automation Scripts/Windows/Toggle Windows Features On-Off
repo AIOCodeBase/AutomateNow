@@ -1,0 +1,4 @@
+@echo off
+dism /online /disable-feature /featurename:Internet-Explorer-Optional-amd64
+echo Windows feature toggled!
+pause
