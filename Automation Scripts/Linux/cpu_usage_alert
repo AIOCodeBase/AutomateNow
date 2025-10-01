@@ -1,0 +1,7 @@
+#!/bin/bash
+ps aux --sort=-%cpu | head -n 2 | tail -n 1 | awk '{print $2, $3, $11}' | {
+    read pid cpu cmd
+    if (( $(echo "$cpu > 90" | bc -l) )); then
+        echo "High CPU: $cmd ($cpu%)" | mail -s "CPU Alert" admin@example.com
+    fi
+}
