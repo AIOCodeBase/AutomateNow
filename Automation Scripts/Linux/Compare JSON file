@@ -1,0 +1,15 @@
+#!/bin/bash
+
+FILE1="file1.json"
+FILE2="file2.json"
+
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "Error: jq is not installed. Please install it and try again."
+    exit 1
+fi
+
+echo "Comparing $FILE1 and $FILE2..."
+
+# Pretty-print and normalize both files, then compare
+diff <(jq -S . "$FILE1") <(jq -S . "$FILE2")
