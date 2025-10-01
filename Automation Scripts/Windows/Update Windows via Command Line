@@ -1,0 +1,4 @@
+@echo off
+wuauclt /detectnow /updatenow
+echo Windows update initiated!
+pause
