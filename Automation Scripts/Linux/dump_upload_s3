@@ -1,0 +1,3 @@
+#!/bin/bash
+mysqldump -u user -p'password' db_name > dump.sql
+aws s3 cp dump.sql s3://your-bucket/backups/
