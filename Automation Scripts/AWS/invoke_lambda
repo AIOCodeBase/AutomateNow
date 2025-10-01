@@ -1,0 +1,9 @@
+import boto3
+
+def invoke_lambda(function_name):
+    lambda_client = boto3.client('lambda')
+    response = lambda_client.invoke(FunctionName=function_name)
+    print(f"Invoked {function_name}")
+
+if __name__ == "__main__":
+    invoke_lambda('my-function')
