@@ -1,0 +1,8 @@
+#!/bin/bash
+smartctl -a /dev/sda | grep "Media_Wearout_Indicator" | {
+    read -r line
+    wearout=$(echo $line | awk '{print $10}')
+    if [ "$wearout" -gt 50 ]; then
+        echo "Disk wearout: $wearout%" | mail -s "Disk Health Alert" admin@example.com
+    fi
+}
