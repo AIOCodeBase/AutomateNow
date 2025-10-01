@@ -1,0 +1,4 @@
+@echo off
+rmdir /s /q "FolderToDelete"
+echo Folder deleted!
+pause
