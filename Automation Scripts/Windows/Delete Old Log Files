@@ -1,0 +1,4 @@
+@echo off
+forfiles /p "C:\Logs" /s /d -30 /c "cmd /c del @path"
+echo Old log files deleted!
+pause
