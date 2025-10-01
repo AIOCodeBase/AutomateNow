@@ -1,0 +1,6 @@
+@echo off
+devcon disable "ACPI\SynTP*"
+timeout /t 3
+devcon enable "ACPI\SynTP*"
+echo Touchpad toggled!
+pause
