@@ -1,0 +1,4 @@
+@echo off
+wmic logicaldisk get size,freespace,caption > disk_space.log
+echo Disk space logged!
+pause
