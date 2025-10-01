@@ -1,0 +1,216 @@
+#!/bin/bash
+# automated ssh key generation script with security best practices
+
+set -euo pipefail
+
+show_help() {
+    cat << EOF
+SSH Key Generator - Automated SSH key generation script
+
+Usage: $0 [OPTIONS]
+
+Options:
+    -t, --type TYPE         Key type (rsa, ed25519, ecdsa) [default: ed25519]
+    -b, --bits BITS         Key size in bits (rsa: 2048-4096, ecdsa: 256/384/521) [default: auto]
+    -f, --file FILE         Output file path [default: ~/.ssh/id_TYPE]
+    -e, --email EMAIL       Email for key comment
+    -p, --passphrase        Prompt for passphrase (interactive)
+    -n, --no-passphrase     Generate key without passphrase
+    -c, --comment COMMENT   Custom comment for the key
+    -o, --overwrite         Overwrite existing key files
+    -q, --quiet             Quiet mode - minimal output
+    -h, --help              Show this help message
+
+Examples:
+    $0 -t ed25519 -e user@example.com
+    $0 -t rsa -b 4096 -f ~/.ssh/github_key
+    $0 -t ecdsa -p -c "work laptop key"
+
+EOF
+}
+
+# default values
+KEY_TYPE="ed25519"
+KEY_BITS=""
+OUTPUT_FILE=""
+EMAIL=""
+COMMENT=""
+USE_PASSPHRASE=""
+OVERWRITE=false
+QUIET=false
+
+# parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -t|--type)
+            KEY_TYPE="$2"
+            shift 2
+            ;;
+        -b|--bits)
+            KEY_BITS="$2"
+            shift 2
+            ;;
+        -f|--file)
+            OUTPUT_FILE="$2"
+            shift 2
+            ;;
+        -e|--email)
+            EMAIL="$2"
+            shift 2
+            ;;
+        -p|--passphrase)
+            USE_PASSPHRASE="prompt"
+            shift
+            ;;
+        -n|--no-passphrase)
+            USE_PASSPHRASE="none"
+            shift
+            ;;
+        -c|--comment)
+            COMMENT="$2"
+            shift 2
+            ;;
+        -o|--overwrite)
+            OVERWRITE=true
+            shift
+            ;;
+        -q|--quiet)
+            QUIET=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            echo "Use -h or --help for usage information" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# validate key type
+case $KEY_TYPE in
+    rsa|ed25519|ecdsa)
+        ;;
+    *)
+        echo "Error: Invalid key type '$KEY_TYPE'. Supported types: rsa, ed25519, ecdsa" >&2
+        exit 1
+        ;;
+esac
+
+# set default key bits based on type
+if [[ -z "$KEY_BITS" ]]; then
+    case $KEY_TYPE in
+        rsa)
+            KEY_BITS="3072"
+            ;;
+        ecdsa)
+            KEY_BITS="256"
+            ;;
+        ed25519)
+            # ed25519 doesn't use bits parameter
+            ;;
+    esac
+fi
+
+# validate key bits for specific types
+if [[ "$KEY_TYPE" == "rsa" && "$KEY_BITS" -lt 2048 ]]; then
+    echo "Error: RSA key size must be at least 2048 bits" >&2
+    exit 1
+fi
+
+if [[ "$KEY_TYPE" == "ecdsa" && ! "$KEY_BITS" =~ ^(256|384|521)$ ]]; then
+    echo "Error: ECDSA key size must be 256, 384, or 521 bits" >&2
+    exit 1
+fi
+
+# set default output file
+if [[ -z "$OUTPUT_FILE" ]]; then
+    OUTPUT_FILE="$HOME/.ssh/id_$KEY_TYPE"
+fi
+
+# ensure .ssh directory exists
+mkdir -p "$(dirname "$OUTPUT_FILE")"
+chmod 700 "$(dirname "$OUTPUT_FILE")"
+
+# check if key already exists
+if [[ -f "$OUTPUT_FILE" && "$OVERWRITE" != true ]]; then
+    echo "Error: Key file '$OUTPUT_FILE' already exists. Use -o to overwrite." >&2
+    exit 1
+fi
+
+# build comment
+if [[ -n "$COMMENT" ]]; then
+    KEY_COMMENT="$COMMENT"
+elif [[ -n "$EMAIL" ]]; then
+    KEY_COMMENT="$EMAIL"
+else
+    KEY_COMMENT="$(whoami)@$(hostname)-$(date +%Y%m%d)"
+fi
+
+# build ssh-keygen command
+SSH_KEYGEN_CMD="ssh-keygen -t $KEY_TYPE"
+
+if [[ "$KEY_TYPE" != "ed25519" && -n "$KEY_BITS" ]]; then
+    SSH_KEYGEN_CMD="$SSH_KEYGEN_CMD -b $KEY_BITS"
+fi
+
+SSH_KEYGEN_CMD="$SSH_KEYGEN_CMD -f $OUTPUT_FILE -C \"$KEY_COMMENT\""
+
+# handle passphrase
+if [[ "$USE_PASSPHRASE" == "none" ]]; then
+    SSH_KEYGEN_CMD="$SSH_KEYGEN_CMD -N \"\""
+elif [[ "$USE_PASSPHRASE" == "prompt" ]]; then
+    # interactive mode - let ssh-keygen prompt for passphrase
+    :
+else
+    # ask user for preference
+    echo "Do you want to protect this key with a passphrase? (y/N)"
+    read -r response
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+        USE_PASSPHRASE="prompt"
+    else
+        SSH_KEYGEN_CMD="$SSH_KEYGEN_CMD -N \"\""
+    fi
+fi
+
+# generate the key
+[[ "$QUIET" != true ]] && echo "Generating $KEY_TYPE SSH key..."
+[[ "$QUIET" != true ]] && echo "Command: $SSH_KEYGEN_CMD"
+
+if [[ "$USE_PASSPHRASE" != "prompt" ]]; then
+    eval "$SSH_KEYGEN_CMD"
+else
+    # for interactive passphrase, remove the -N parameter
+    SSH_KEYGEN_CMD=$(echo "$SSH_KEYGEN_CMD" | sed 's/ -N ""//g')
+    eval "$SSH_KEYGEN_CMD"
+fi
+
+# set proper permissions
+chmod 600 "$OUTPUT_FILE"
+chmod 644 "$OUTPUT_FILE.pub"
+
+# display results
+if [[ "$QUIET" != true ]]; then
+    echo "SSH key pair generated successfully!"
+    echo "Private key: $OUTPUT_FILE"
+    echo "Public key:  $OUTPUT_FILE.pub"
+    echo ""
+    echo "Key fingerprint:"
+    ssh-keygen -lf "$OUTPUT_FILE.pub"
+    echo ""
+    echo "Public key content:"
+    cat "$OUTPUT_FILE.pub"
+    echo ""
+    echo "To add this key to a remote server, run:"
+    echo "ssh-copy-id -i $OUTPUT_FILE.pub user@hostname"
+    echo ""
+    echo "Or manually copy the public key content to ~/.ssh/authorized_keys on the remote server"
+fi
+
+# log the action
+logger "SSH key generated: $OUTPUT_FILE ($KEY_TYPE)"
+
+echo "SSH key generation completed successfully"
