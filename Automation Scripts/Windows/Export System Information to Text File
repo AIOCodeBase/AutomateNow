@@ -1,0 +1,4 @@
+@echo off
+systeminfo > "system_info.txt"
+echo System information exported to system_info.txt!
+pause
