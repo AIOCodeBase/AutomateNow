@@ -1,0 +1,6 @@
+#!/bin/bash
+
+FOLDERNAME ="target_folder"
+
+rm -rf $FOLDERNAME
+echo "Folder $FOLDERNAME has been removed."
